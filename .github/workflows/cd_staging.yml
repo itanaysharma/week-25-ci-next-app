@@ -1,15 +1,17 @@
-name: Deploy to Staging
+name: Deploy to staging
 on:
   push:
-    branches:
-      - "main"
+    branches: [main]
+
 jobs:
   redeploy_everything:
     runs-on: ubuntu-latest
-    name: Deploying everything to staging cluster
+    name: Deploying everything to the staging cluster
     steps:
-      - name: SSH into server
-        run: |
-          echo "${{secrets.SSH_PRIVATE_KEY}}" &> ~/ssh_key
-          chmod 700 ~/ssh_key
-          ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@13.201.18.99 -t "sudo su - && cd week-25-ci-next-app/ && git pull origin main && export PATH=/root/.nvm/versions/node/v22.13.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin && npm install -g pnpm && pnpm install && pnpm build && pm2 restart fe-sever && pm2 restart http-sever && pm2 restart ws-sever"
+      - run: |
+          # Save the SSH private key and adjust its permissions
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
+
+          # SSH into the server with host key checking disabled, then run all commands as root.
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@13.201.18.99 -t "sudo su -c 'git config --global --add safe.directory /home/ubuntu/week-25-ci-next-app && cd week-25-ci-next-app && git pull origin main && export PATH=/root/.nvm/versions/node/v22.13.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin && npm install -g pnpm && pnpm install && pnpm build && pm2 restart fe-sever && pm2 restart http-sever && pm2 restart ws-sever'"
