@@ -13,7 +13,8 @@ jobs:
           echo" ${{secrets.SSH_PRIVATE_KEY}}" &> ~/ssh_key
           mkdir .ssh
           echo "${{secrets.KNOWN_HOSTS}}" &> ~/.ssh/known_hosts
-          ssh -i ~/ssh_key root@13.201.18.99
+          ssh -i ~/ssh_key ubuntu@13.201.18.99
+          sudo su
         #   cd week-25-ci-next-app/ && git pull
         #   pnpm install
         #   pnpm build
