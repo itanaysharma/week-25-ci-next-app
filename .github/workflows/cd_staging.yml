@@ -12,4 +12,4 @@ jobs:
         run: |
           echo "${{secrets.SSH_PRIVATE_KEY}}" &> ~/ssh_key
           chmod 700 ~/ssh_key
-          ssh -o StrictHostKeyChecking=no -i ~/ssh_key root@13.201.18.99 -t "cd week-25-ci-next-app/ && git pull origin main && export PATH=/root/.nvm/versions/node/v22.13.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin && npm install -g pnpm && pnpm install && pnpm build && pm2 restart fe-sever && pm2 restart http-sever && pm2 restart ws-sever"
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@13.201.18.99 -t "sudo su && cd week-25-ci-next-app/ && git pull origin main && export PATH=/root/.nvm/versions/node/v22.13.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin && npm install -g pnpm && pnpm install && pnpm build && pm2 restart fe-sever && pm2 restart http-sever && pm2 restart ws-sever"
